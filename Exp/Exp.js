@@ -3,6 +3,7 @@ import Camera from "../Exp/Utils/Camera.js";
 import Sizes from "../Exp/Utils/Sizes.js";
 import Renderer from "./Utils/Renderer.js";
 import Time from "./Utils/Time.js";
+import Wolrd from "./World/World.js";
 
 export default class Experience {
   static instance;
@@ -17,6 +18,7 @@ export default class Experience {
     this.sizes = new Sizes();
     this.camera = new Camera();
     this.renderer = new Renderer();
+    this.world = new Wolrd();
 
     this.time.on("resize", () => {
       this.resize();
