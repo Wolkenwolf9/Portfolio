@@ -15,13 +15,17 @@ export default class Room {
   setModel() {
     this.actualRoom.children.forEach((child) => {
       child.castShadow = true;
-      child.recieveShadow = true;
+      child.receiveShadow = true;
+
       if (child instanceof THREE.Group) {
         child.children.forEach((groupChild) => {
           groupChild.castShadow = true;
-          groupChild.recieveShadow = true;
+          groupChild.receiveShadow = true;
         });
       }
+
+      // console.log(child);
+
       if (child.name === "Screen") {
         child.material = new THREE.MeshBasicMaterial({
           map: this.resources.items.screen,

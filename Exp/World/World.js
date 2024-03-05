@@ -1,4 +1,5 @@
 import Experience from "../Exp";
+import Controls from "./Controls";
 import Enviroment from "./Enviroment";
 import Room from "./Room";
 export default class World {
@@ -13,10 +14,18 @@ export default class World {
     this.resources.on("ready", () => {
       this.enviroment = new Enviroment();
       this.room = new Room();
+      this.controls = new Controls();
     });
   }
 
   resize() {}
 
-  update() {}
+  update() {
+    if (this.room) {
+      this.room.update();
+    }
+    if (this.controls) {
+      this.controls.update();
+    }
+  }
 }
