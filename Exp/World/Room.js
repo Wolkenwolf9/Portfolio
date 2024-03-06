@@ -1,3 +1,4 @@
+import GSAP from "gsap";
 import * as THREE from "three";
 import Experience from "../Exp";
 
@@ -9,7 +10,14 @@ export default class Room {
     this.room = this.resources.items.room;
     this.actualRoom = this.room.scene;
 
+    this.lerp = {
+      current: 0,
+      target: 0,
+      ease: 0.1,
+    };
+
     this.setModel();
+    this.onMouseMove();
   }
 
   setModel() {
@@ -24,8 +32,6 @@ export default class Room {
         });
       }
 
-      // console.log(child);
-
       if (child.name === "Screen") {
         child.material = new THREE.MeshBasicMaterial({
           map: this.resources.items.screen,
@@ -36,7 +42,22 @@ export default class Room {
     this.actualRoom.scale.set(0.11, 0.11, 0.11);
   }
 
+  onMouseMove() {
+    window.addEventListener("mousemove", (e) => {
+      this.rotation =
+        (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+      this.lerp.target = this.rotation * 0.1;
+    });
+  }
+
   resize() {}
 
-  update() {}
+  update() {
+    this.lerp.current = GSAP.utils.interpolate(
+      this.lerp.current,
+      this.lerp.target,
+      this.lerp.ease
+    );
+    this.actualRoom.rotation.y = this.lerp.current;
+  }
 }
