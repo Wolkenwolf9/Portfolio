@@ -11,10 +11,43 @@ body {
   color: var(--text-black);
 }
 
+h1,
+section,
+p,
+span,
+svg {
+  transition: background-color 0.3s, color 0.3s;
+}
+
 :root {
   --text-black: rgb(26, 26, 26);
   --primary-color: rgb(254, 254, 213);
   --primary-blue: rgb(144, 149, 248);
+  /* Light Theme Variables ============================================= */
+  --color-text-light: rgb(26, 26, 26);
+  --color-background-light: rgb(254, 254, 213);
+  --color-blue-light: rgb(144, 149, 248);
+  --color-green-light: #7ad0ac;
+  --color-pink-light: #e5a1aa;
+  /* Light Theme Variables ============================================= */
+  --color-text-dark: #faf4e5;
+  --color-background-dark: #8395cd;
+}
+
+.light-theme {
+  --color-text: var(--color-text-light);
+  --color-background: var(--color-background-light);
+  --color-blue: var(--color-blue-light);
+  --color-green: var(--color-green-light);
+  --color-pink: var(--color-pink-light);
+}
+
+.dark-theme {
+  --color-text: var(--color-text-dark);
+  --color-background: var(--color-background-dark);
+  --color-blue: var(--color-text-dark);
+  --color-green: var(--color-text-dark);
+  --color-pink: var(--color-text-dark);
 }
 
 /* Experience ============================================= */
@@ -43,7 +76,63 @@ body {
   position: relative;
 }
 
+/* Toggle Bar ============================================= */
+
+.toggle-bar {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  top: 48px;
+  right: 48px;
+  z-index: 999999999999;
+}
+
+.sun-wrapper,
+.moon-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text);
+}
+
+.toggle-button {
+  cursor: pointer;
+  position: relative;
+  width: 56px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-blue);
+  border-radius: 999px;
+  margin: 0px 16px;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.toggle-circle {
+  position: absolute;
+  left: 6px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-background);
+  transition: all 0.2s ease-in-out;
+}
+
+.toggle-button:hover .toggle-circle {
+  transform: scale(0.9);
+}
+
+.slide {
+  left: 30px;
+}
+
 /* Section Formatting ============================================= */
+
 .section-margin {
   height: 3000px;
   width: 100%;
@@ -53,7 +142,7 @@ body {
   width: 50%;
   padding: 1000px 4%;
   margin: 0;
-  background-color: var(--primary-color);
+  background-color: var(--color-background);
 }
 .left {
   margin-right: auto;
@@ -65,7 +154,7 @@ body {
 .section-into-wrapper {
   position: relative;
   padding: 20% 5%;
-  border-bottom: 2px solid var(--primary-blue);
+  border-bottom: 2px solid var(--color-blue);
   padding-bottom: 400px;
 }
 
@@ -74,23 +163,25 @@ body {
   padding: 20% 5%;
 }
 
-.sectrion-heading {
+.section-heading {
   font-size: 18px;
   font-weight: 700;
   line-height: 1.8;
   margin-top: 64px;
+  color: var(--color-text);
 }
 
 .section-text {
   line-height: 2;
   margin-top: 18px;
   font-size: 16px;
+  color: var(--color-text);
 }
 /* Fancy Headline ============================================= */
 
 .section-title {
   position: relative;
-  color: var(--primary-blue);
+  color: var(--color-blue);
 }
 
 .section-title-text {
@@ -101,6 +192,7 @@ body {
   transform: skewY(25deg);
   z-index: 5;
   text-transform: uppercase;
+  color: var(--color-blue);
 }
 
 .styleOne,
@@ -111,7 +203,7 @@ body {
   width: 100%;
   max-width: 278px;
   height: 60px;
-  border: 1px solid var(--primary-blue);
+  border: 1px solid var(--color-blue);
   transform-origin: left;
   transform: skewY(-25deg);
 }
@@ -127,14 +219,14 @@ body {
 .styleThree {
   top: 80px;
   transform: skewY(25deg);
-  background-color: var(--primary-blue);
+  background-color: var(--color-blue);
 }
 
 .section-number {
   position: absolute;
   bottom: 15px;
   right: 0;
-  color: var(--primary-blue);
+  color: var(--color-blue);
   font-size: 24px;
 }
 
@@ -163,17 +255,55 @@ body {
   position: absolute;
   top: calc(50% - 120px);
   right: 0;
+  color: var(--color-text);
 }
 
 .hero-main-title {
   font-size: 64px;
+  color: var(--color-text);
 }
 
 .hero-main-description {
   font-size: 20px;
+  color: var(--color-text);
 }
 
 .hero-second-subheading {
   font-size: 32px;
   text-transform: uppercase;
+  color: var(--color-text);
+}
+
+/* Other Colors ============================================= */
+
+.pink-text {
+  color: var(--color-pink);
+}
+
+.pink-border {
+  border-color: var(--color-pink);
+}
+
+.pink-background {
+  background-color: var(--color-pink);
+}
+
+.green-text {
+  color: var(--color-green);
+}
+
+.green-border {
+  border-color: var(--color-green);
+}
+
+.green-background {
+  background-color: var(--color-green);
+}
+
+/* Media Queries ============================================= */
+
+@media (max-width: 968px) {
+  .section {
+    width: 100%;
+  }
 }

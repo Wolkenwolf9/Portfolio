@@ -40,6 +40,10 @@ export default class Room {
     });
     this.scene.add(this.actualRoom);
     this.actualRoom.scale.set(0.11, 0.11, 0.11);
+
+    this.pointLight = new THREE.PointLight(0xffffff, 2, 10);
+    this.pointLight.position.set(5, 1, -5);
+    this.actualRoom.add(this.pointLight);
   }
 
   onMouseMove() {
