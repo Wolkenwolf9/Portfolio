@@ -32,10 +32,24 @@ export default class Room {
         });
       }
 
-      if (child.name === "Screen") {
-        child.material = new THREE.MeshBasicMaterial({
+      if (child.name === "Computer") {
+        child.children[1].material = new THREE.MeshBasicMaterial({
           map: this.resources.items.screen,
         });
+      }
+
+      if (child.name === "Mini_Floor") {
+        child.position.x = -0.978692;
+        child.position.z = 11.0816;
+      }
+
+      if (
+        child.name === "Mailbox" ||
+        child.name === "FloorFirst" ||
+        child.name === "FloorSecond" ||
+        child.name === "FloorThird"
+      ) {
+        child.scale.set(0, 0, 0);
       }
     });
     this.scene.add(this.actualRoom);

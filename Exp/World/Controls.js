@@ -14,7 +14,7 @@ export default class Controls {
     this.room = this.experience.world.room.actualRoom;
     GSAP.registerPlugin(ScrollTrigger);
 
-    this.setPath();
+    this.setScrollTrigger();
 
     // this.progress = 0;
     // this.dummyVector = new THREE.Vector3(0, 0, 0);
@@ -30,84 +30,214 @@ export default class Controls {
     // this.onWheel();
   }
 
-  setPath() {
-    this.timeline = new GSAP.timeline();
-    this.timeline.to(this.room.position, {
-      x: () => {
-        return this.sizes.width * 0.0011;
+  setScrollTrigger() {
+    ScrollTrigger.matchMedia({
+      //Desktop
+      "(min-width: 969px)": () => {
+        // console.log("fired Desktop");
+
+        this.room.scale.set(0.11, 0.11, 0.11);
+        // First section -----------------------------------------
+        this.firstMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".first-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        });
+        this.firstMoveTimeline.to(this.room.position, {
+          x: () => {
+            return this.sizes.width * 0.0011;
+          },
+        });
+
+        // Second section -----------------------------------------
+        this.secondMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".second-move",
+            // markers: true,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(
+            this.room.position,
+            {
+              x: () => {
+                return 1;
+              },
+              z: () => {
+                return this.sizes.height * 0.0032;
+              },
+            },
+            "same"
+          )
+          .to(
+            this.room.scale,
+            {
+              x: 0.4,
+              y: 0.4,
+              z: 0.4,
+            },
+            "same"
+          );
+
+        // Third section -----------------------------------------
+        this.thirdMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".third-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.camera.orthographicCamera.position, {
+          // x: -4.1,
+          // y: 1.5,
+          x: () => {
+            // Berechnen Sie die x-Position relativ zur Bildschirmbreite
+            return -0.002 * this.sizes.width;
+          },
+          y: () => {
+            // Berechnen Sie die y-Position relativ zur Bildschirmhöhe
+            return 0.0013 * this.sizes.height;
+          },
+          z: 10,
+        });
       },
-      scrollTrigger: {
-        trigger: ".first-move",
-        markers: true,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 0.5,
-        invalidateOnRefresh: true,
+      //Mobile
+      "(max-width: 969px)": () => {
+        // console.log("fired Mobile");
+
+        // Resets
+        this.room.scale.set(0.07, 0.07, 0.07);
+        this.room.position.set(0, 0, 0);
+
+        // First section -----------------------------------------
+        this.firstMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".first-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.room.scale, {
+          x: 0.1,
+          y: 0.1,
+          z: 0.1,
+        });
+        // Second section -----------------------------------------
+        this.secondMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".second-move",
+            // markers: true,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(
+            this.room.scale,
+            {
+              x: 0.25,
+              y: 0.25,
+              z: 0.25,
+            },
+            "same"
+          )
+          .to(
+            this.room.position,
+            {
+              x: 2.5,
+            },
+            "same"
+          );
+        // Third section -----------------------------------------
+        this.thirdMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".third-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.camera.orthographicCamera.position, {
+          x: 0.9,
+          y: -0.5,
+        });
+      },
+
+      // All
+      all: () => {
+        //Mini Platform Animations
+        this.secondPartTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".third-move",
+            start: "center center",
+          },
+        });
+
+        this.room.children.forEach((child) => {
+          if (child.name == "Mini_Floor") {
+            this.first = GSAP.to(child.position, {
+              x: -7.1964,
+              z: 17.2994,
+              duration: 0.3,
+            });
+          }
+          if (child.name == "Mailbox") {
+            this.second = GSAP.to(child.scale, {
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: "back.out(3)",
+              duration: 0.3,
+            });
+          }
+          if (child.name == "FloorFirst") {
+            this.third = GSAP.to(child.scale, {
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: "back.out(3)",
+              duration: 0.3,
+            });
+          }
+          if (child.name == "FloorSecond") {
+            this.fourth = GSAP.to(child.scale, {
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: "back.out(3)",
+              duration: 0.3,
+            });
+          }
+          if (child.name == "FloorThird") {
+            this.fifth = GSAP.to(child.scale, {
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: "back.out(3)",
+              duration: 0.3,
+            });
+          }
+        });
+        this.secondPartTimeline.add(this.first);
+        this.secondPartTimeline.add(this.second);
+        this.secondPartTimeline.add(this.third);
+        this.secondPartTimeline.add(this.fourth);
+        this.secondPartTimeline.add(this.fifth);
       },
     });
   }
-  //   this.curve = new THREE.CatmullRomCurve3(
-  //     [
-  //       new THREE.Vector3(-5, 0, 0),
-  //       new THREE.Vector3(0, 0, -5),
-  //       new THREE.Vector3(0, 7, 5),
-  //       new THREE.Vector3(5, 0, 0),
-  //       new THREE.Vector3(-2, -6, 1),
-  //       new THREE.Vector3(0, 0, 5),
-  //     ],
-  //     true
-  //   );
-
-  //   const points = this.curve.getPoints(50);
-  //   const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-  //   const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-
-  //   // Create the final object to add to the scene
-  //   const curveObject = new THREE.Line(geometry, material);
-  //   this.scene.add(curveObject);
-  // }
-
-  // onWheel() {
-  //   window.addEventListener("wheel", (e) => {
-  //     if (e.deltaY > 0) {
-  //       this.lerp.target += 0.01;
-  //       this.back = true;
-  //     } else {
-  //       this.lerp.target -= 0.01;
-  //       this.back = false;
-  //     }
-  //   });
-  // }
 
   resize() {}
 
-  update() {
-    // this.lerp.current = GSAP.utils.interpolate(
-    //   this.lerp.current,
-    //   this.lerp.target,
-    //   this.lerp.ease
-    // );
-    // this.curve.getPointAt(this.lerp.current % 1, this.position);
-    // this.camera.orthographicCamera.position.copy(this.position);
-    // this.directionalVector.subVectors(
-    //   this.curve.getPointAt((this.lerp.current % 1) + 0.000001),
-    //   this.position
-    // );
-    // this.directionalVector.normalize();
-    // this.crossVector.crossVectors(this.directionalVector, this.staticVector);
-    // this.crossVector.multiplyScalar(100000);
-    // this.camera.orthographicCamera.lookAt(0, 0, 0);
-    // if (this.back) {
-    //   this.lerp.target -= 0.001;
-    // } else {
-    //   this.lerp.target += 0.001;
-    // }
-    // this.lerp.target = GSAP.utils.clamp(0, 1, this.lerp.target);
-    // this.lerp.current = GSAP.utils.clamp(0, 1, this.lerp.current);
-    // this.curve.getPointAt(this.lerp.current, this.position);
-    // this.curve.getPointAt(this.lerp.current + 0.00001, this.lookAtPosition);
-    // this.camera.orthographicCamera.position.copy(this.position);
-    // this.camera.orthographicCamera.lookAt(this.lookAtPosition);
-  }
+  update() {}
 }
