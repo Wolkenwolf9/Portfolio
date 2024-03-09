@@ -26,7 +26,7 @@ export default class Experience {
     this.theme = new Theme();
     this.world = new World();
 
-    this.time.on("resize", () => {
+    this.sizes.on("resize", () => {
       this.resize();
     });
 

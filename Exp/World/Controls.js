@@ -1,6 +1,6 @@
 import GSAP from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
-
+import ASScroll from "@ashthornton/asscroll";
 import Experience from "../Exp";
 
 export default class Controls {
@@ -12,8 +12,13 @@ export default class Controls {
     this.time = this.experience.time;
     this.camera = this.experience.camera;
     this.room = this.experience.world.room.actualRoom;
+
+    this.circleFirst = this.experience.world.floor.circleFirst;
+    this.circleSecond = this.experience.world.floor.circleSecond;
+    this.circleThird = this.experience.world.floor.circleThird;
     GSAP.registerPlugin(ScrollTrigger);
 
+    this.setSmoothScroll();
     this.setScrollTrigger();
 
     // this.progress = 0;
@@ -30,12 +35,62 @@ export default class Controls {
     // this.onWheel();
   }
 
+  setupASScroll() {
+    // https://github.com/ashthornton/asscroll
+    const asscroll = new ASScroll({
+      ease: 0.1,
+      disableRaf: true,
+    });
+
+    GSAP.ticker.add(asscroll.update);
+
+    ScrollTrigger.defaults({
+      scroller: asscroll.containerElement,
+    });
+
+    ScrollTrigger.scrollerProxy(asscroll.containerElement, {
+      scrollTop(value) {
+        if (arguments.length) {
+          asscroll.currentPos = value;
+          return;
+        }
+        return asscroll.currentPos;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+      fixedMarkers: true,
+    });
+
+    asscroll.on("update", ScrollTrigger.update);
+    ScrollTrigger.addEventListener("refresh", asscroll.resize);
+
+    requestAnimationFrame(() => {
+      asscroll.enable({
+        newScrollElements: document.querySelectorAll(
+          ".gsap-marker-start, .gsap-marker-end, [asscroll]"
+        ),
+      });
+    });
+    return asscroll;
+  }
+
+  setSmoothScroll() {
+    this.asscroll = this.setupASScroll();
+  }
+
   setScrollTrigger() {
     ScrollTrigger.matchMedia({
       //Desktop
       "(min-width: 969px)": () => {
         // console.log("fired Desktop");
 
+        //Reset
         this.room.scale.set(0.11, 0.11, 0.11);
         // First section -----------------------------------------
         this.firstMoveTimeline = new GSAP.timeline({
@@ -70,6 +125,7 @@ export default class Controls {
               x: () => {
                 return 1;
               },
+              y: 0.7,
               z: () => {
                 return this.sizes.height * 0.0032;
               },
@@ -175,6 +231,112 @@ export default class Controls {
 
       // All
       all: () => {
+        this.sections = document.querySelectorAll(".section");
+        this.sections.forEach((section) => {
+          this.progressWrapper = section.querySelector(".progress-wrapper");
+          this.progressBar = section.querySelector(".progress-bar");
+
+          if (section.classList.contains("right")) {
+            GSAP.to(section, {
+              borderTopLeftRadius: 10,
+              scrollTrigger: {
+                trigger: section,
+                start: "top bottom",
+                end: "top top",
+                scrub: 0.6,
+              },
+            });
+            GSAP.to(section, {
+              borderBottomLeftRadius: 700,
+              scrollTrigger: {
+                trigger: section,
+                start: "bottom bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            });
+          } else {
+            GSAP.to(section, {
+              borderTopRightRadius: 10,
+              scrollTrigger: {
+                trigger: section,
+                start: "top bottom",
+                end: "top top",
+                scrub: 0.6,
+              },
+            });
+            GSAP.to(section, {
+              borderBottomRightRadius: 700,
+              scrollTrigger: {
+                trigger: section,
+                start: "bottom bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            });
+          }
+
+          GSAP.from(this.progressBar, {
+            scaleY: 0,
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.4,
+              pin: this.progressWrapper,
+              pinSpacing: false,
+            },
+          });
+        });
+
+        // Circles Animations -----------------------------------------
+
+        // First Section -----------------------------------------
+        this.firstMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".first-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.circleFirst.scale, {
+          x: 3,
+          y: 3,
+          z: 3,
+        });
+
+        // Second section -----------------------------------------
+        this.secondMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".second-move",
+            // markers: true,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.circleSecond.scale, {
+          x: 3,
+          y: 3,
+          z: 3,
+        });
+
+        // Third section -----------------------------------------
+        this.thirdMoveTimeline = new GSAP.timeline({
+          scrollTrigger: {
+            trigger: ".third-move",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }).to(this.circleThird.scale, {
+          x: 5,
+          y: 5,
+          z: 5,
+        });
+
         //Mini Platform Animations
         this.secondPartTimeline = new GSAP.timeline({
           scrollTrigger: {

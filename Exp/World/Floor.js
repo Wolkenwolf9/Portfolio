@@ -6,6 +6,38 @@ export default class Floor {
     this.scene = this.experience.scene;
 
     this.setFloor();
+    this.setCircles();
+  }
+
+  setCircles() {
+    const geometry = new THREE.CircleGeometry(5, 64);
+    const material = new THREE.MeshStandardMaterial({ color: 0x5e1675 });
+    const material2 = new THREE.MeshStandardMaterial({ color: 0xb83b5e });
+    const material3 = new THREE.MeshStandardMaterial({ color: 0xf08a5d });
+    this.circleFirst = new THREE.Mesh(geometry, material);
+    this.circleSecond = new THREE.Mesh(geometry, material2);
+    this.circleThird = new THREE.Mesh(geometry, material3);
+
+    this.circleFirst.position.y = -0.29;
+
+    this.circleSecond.position.y = -0.28;
+    this.circleSecond.position.x = 1.8;
+
+    this.circleThird.position.y = -0.27;
+    this.circleThird.position.x = 1.9;
+
+    this.circleFirst.scale.set(0, 0, 0);
+    this.circleSecond.scale.set(0, 0, 0);
+    this.circleThird.scale.set(0, 0, 0);
+    this.circleFirst.rotation.x = -Math.PI / 2;
+    this.circleSecond.rotation.x = -Math.PI / 2;
+    this.circleThird.rotation.x = -Math.PI / 2;
+    this.circleFirst.receiveShadow = true;
+    this.circleSecond.receiveShadow = true;
+    this.circleThird.receiveShadow = true;
+    this.scene.add(this.circleFirst);
+    this.scene.add(this.circleSecond);
+    this.scene.add(this.circleThird);
   }
 
   setFloor() {
