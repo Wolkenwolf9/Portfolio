@@ -1,6 +1,6 @@
+import ASScroll from "@ashthornton/asscroll";
 import GSAP from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
-import ASScroll from "@ashthornton/asscroll";
 import Experience from "../Exp";
 
 export default class Controls {
@@ -17,6 +17,8 @@ export default class Controls {
     this.circleSecond = this.experience.world.floor.circleSecond;
     this.circleThird = this.experience.world.floor.circleThird;
     GSAP.registerPlugin(ScrollTrigger);
+
+    document.querySelector(".page").style.overflow = "visible";
 
     this.setSmoothScroll();
     this.setScrollTrigger();

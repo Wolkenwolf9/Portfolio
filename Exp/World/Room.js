@@ -9,6 +9,7 @@ export default class Room {
     this.resources = this.experience.resources;
     this.room = this.resources.items.room;
     this.actualRoom = this.room.scene;
+    this.roomChildren = {};
 
     this.lerp = {
       current: 0,
@@ -43,21 +44,32 @@ export default class Room {
         child.position.z = 11.0816;
       }
 
-      if (
-        child.name === "Mailbox" ||
-        child.name === "FloorFirst" ||
-        child.name === "FloorSecond" ||
-        child.name === "FloorThird"
-      ) {
-        child.scale.set(0, 0, 0);
+      // if (
+      //   child.name === "Mailbox" ||
+      //   child.name === "FloorFirst" ||
+      //   child.name === "FloorSecond" ||
+      //   child.name === "FloorThird"
+      // ) {
+      //   child.scale.set(0, 0, 0);
+      // }
+      child.scale.set(0, 0, 0);
+      if (child.name === "Cube") {
+        // child.scale.set(1, 1, 1);
+        child.position.set(0, -1.5, 0);
+        child.rotation.y = Math.PI / -4;
       }
+
+      this.roomChildren[child.name.toLowerCase()] = child;
     });
     this.scene.add(this.actualRoom);
     this.actualRoom.scale.set(0.11, 0.11, 0.11);
 
     this.pointLight = new THREE.PointLight(0xffffff, 2, 10);
     this.pointLight.position.set(5, 1, -5);
+    this.pointLight.intensity = 0;
     this.actualRoom.add(this.pointLight);
+
+    this.roomChildren["pointLight"] = this.pointLight;
   }
 
   onMouseMove() {
